@@ -87,15 +87,21 @@ def _parse_detail_page(html):
             if text:
                 detail["rating"] = text
 
-    # Genre
-    for label in soup.find_all(string=lambda t: t and "Genre" in t):
-        parent = label.parent
-        if parent:
-            sibling_text = parent.get_text(strip=True)
-            genre = sibling_text.replace("Genre:", "").replace("Genre", "").strip()
-            if genre:
-                detail["genre"] = genre
-                break
+    # Genre - try #data > p:nth-child(2) first, then fallback to text search
+    genre_el = soup.select_one("#data > p:nth-child(2)")
+    if genre_el:
+        genre = genre_el.get_text(strip=True)
+        if genre:
+            detail["genre"] = genre
+    else:
+        for label in soup.find_all(string=lambda t: t and "Genre" in t):
+            parent = label.parent
+            if parent:
+                sibling_text = parent.get_text(strip=True)
+                genre = sibling_text.replace("Genre:", "").replace("Genre", "").strip()
+                if genre:
+                    detail["genre"] = genre
+                    break
 
     # Release date - look for a date pattern near "Premiär"
     for label in soup.find_all(string=lambda t: t and "Premiär" in t):

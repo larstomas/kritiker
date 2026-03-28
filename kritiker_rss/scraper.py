@@ -71,26 +71,20 @@ def _parse_detail_page(html):
     soup = BeautifulSoup(html, "lxml")
     detail = {}
 
-    # Rating - look for kritiker score
-    for tag in soup.select(".betyg, .rating, .score, [class*=betyg], [class*=rating]"):
-        text = tag.get_text(strip=True)
-        if text:
-            detail["rating"] = text
-            break
-
-    # Try to find rating from meta or structured patterns
-    if "rating" not in detail:
-        for text_node in soup.find_all(string=True):
-            text = text_node.strip()
-            if "/" in text and len(text) <= 5:
-                try:
-                    num, denom = text.split("/")
-                    float(num)
-                    float(denom)
-                    detail["rating"] = text
-                    break
-                except ValueError:
-                    continue
+    # Average grade from #betyg > p.grade (score encoded in class e.g. grade39 = 3.9)
+    import re
+    grade_el = soup.select_one("#betyg > p.grade")
+    if grade_el:
+        for cls in grade_el.get("class", []):
+            m = re.match(r"grade(\d+)", cls)
+            if m and cls != "grade":
+                raw = m.group(1)
+                detail["rating"] = f"{raw[0]}.{raw[1:]}" if len(raw) > 1 else raw
+                break
+        if "rating" not in detail:
+            text = grade_el.get_text(strip=True)
+            if text:
+                detail["rating"] = text
 
     # Genre
     for label in soup.find_all(string=lambda t: t and "Genre" in t):

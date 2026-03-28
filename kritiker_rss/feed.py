@@ -26,13 +26,15 @@ def generate_feed(category, items, base_url=None):
             title = f"{item['artist']} - {title}"
         elif item.get("director"):
             title = f"{title} ({item['director']})"
+        detail = item.get("detail", {})
+        if detail.get("rating"):
+            title = f"[{detail['rating']}] {title}"
         fe.title(title)
 
         full_url = config.BASE_URL + item["url"]
         fe.link(href=full_url)
         fe.guid(full_url, permalink=True)
 
-        detail = item.get("detail", {})
         description = _build_description(item, detail)
         fe.description(description)
 

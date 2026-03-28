@@ -28,7 +28,7 @@ def generate_feed(category, items, base_url=None):
             title = f"{title} ({item['director']})"
         detail = item.get("detail", {})
         if detail.get("rating"):
-            title = f"[{detail['rating']}] {title}"
+            title = f"{title} [{detail['rating']}]"
         fe.title(title)
 
         full_url = config.BASE_URL + item["url"]

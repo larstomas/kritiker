@@ -138,13 +138,16 @@ def _parse_detail_page(html):
     if reviews:
         detail["reviews"] = reviews[:15]
 
-    # Streaming availability - only match short link text (service names)
+    # Streaming availability - look for links within the main content area only,
+    # excluding the site-wide nav/footer which links to streaming filter pages
     known_services = {"Netflix", "Max", "HBO Max", "Viaplay", "Disney+", "Prime Video",
                       "Apple TV+", "Spotify", "SVT Play", "TV4 Play", "Cineasterna"}
     streaming = []
-    for link in soup.find_all("a"):
+    # Only match links that point to external streaming sites (not internal /filmer/ pages)
+    for link in soup.find_all("a", href=True):
+        href = link.get("href", "")
         name = link.get_text(strip=True)
-        if name in known_services and name not in streaming:
+        if name in known_services and name not in streaming and not href.startswith("/"):
             streaming.append(name)
     if streaming:
         detail["streaming"] = streaming

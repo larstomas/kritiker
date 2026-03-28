@@ -28,10 +28,10 @@ CATEGORIES = {
         "feed_description": "Senaste skivrecensioner från Kritiker.se",
     },
     "spel": {
-        "api": "/api/spel/cacha?typ=senaste",
+        "api": "/api/spel/cacha?typ=basta",
         "title_field": "titel",
-        "feed_title": "Kritiker.se - Senaste spel",
-        "feed_description": "Senaste spelrecensioner från Kritiker.se",
+        "feed_title": "Kritiker.se - Bästa nya spel",
+        "feed_description": "Bästa nya spelrecensioner från Kritiker.se",
     },
 }
 

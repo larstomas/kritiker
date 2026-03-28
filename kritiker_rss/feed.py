@@ -17,6 +17,9 @@ def generate_feed(category, items, base_url=None):
     fg.description(cat_config["feed_description"])
     fg.language("sv")
     fg.lastBuildDate(datetime.now(timezone.utc))
+    fg.image(url=f"{config.BASE_URL}/bilder/favicon.png",
+             title=cat_config["feed_title"],
+             link=f"{config.BASE_URL}/{category}/")
 
     for item in items:
         fe = fg.add_entry()

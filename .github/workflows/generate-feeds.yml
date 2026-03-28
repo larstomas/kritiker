@@ -32,7 +32,6 @@ jobs:
 
       - name: Add index page
         run: |
-          cp output/kritiker.opml output/
           cat > output/index.html << 'HTMLEOF'
           <!DOCTYPE html>
           <html lang="sv">

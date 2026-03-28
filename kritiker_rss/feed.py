@@ -33,7 +33,8 @@ def generate_feed(category, items, base_url=None):
 
         full_url = config.BASE_URL + item["url"]
         fe.link(href=full_url)
-        fe.guid(full_url, permalink=True)
+        rating = detail.get("rating", "")
+        fe.guid(f"{full_url}#rating-{rating}" if rating else full_url, permalink=False)
 
         description = _build_description(item, detail)
         fe.description(description)

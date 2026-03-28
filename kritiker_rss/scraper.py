@@ -1,3 +1,4 @@
+import html
 import json
 import os
 import time
@@ -29,7 +30,7 @@ def fetch_latest(category):
 
     items = []
     for raw in data:
-        title = raw.get(cat_config["title_field"], "")
+        title = html.unescape(raw.get(cat_config["title_field"], ""))
         if not title:
             continue
         item = {
@@ -39,9 +40,9 @@ def fetch_latest(category):
             "master": raw.get("master"),
         }
         if "artist" in raw:
-            item["artist"] = raw["artist"]
+            item["artist"] = html.unescape(raw["artist"])
         if "extradata" in raw and raw["extradata"]:
-            item["director"] = raw["extradata"]
+            item["director"] = html.unescape(raw["extradata"])
         items.append(item)
 
     return items
